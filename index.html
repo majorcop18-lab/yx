@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Perbandingan Target Belajar</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .container { max-width: 800px; margin: auto; }
+        input, button { margin: 5px; padding: 8px; }
+        canvas { max-width: 100%; height: 300px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Perbandingan Target Belajar</h1>
+        <p>Masukkan nilai-nilai Anda untuk menghitung rata-rata, melihat grafik perbandingan, dan menentukan peningkatan nilai untuk mencapai target.</p>
+        
+        <h2>Input Nilai</h2>
+        <label for="nilai1">Nilai 1:</label>
+        <input type="number" id="nilai1" placeholder="Masukkan nilai"><br>
+        <label for="nilai2">Nilai 2:</label>
+        <input type="number" id="nilai2" placeholder="Masukkan nilai"><br>
+        <label for="nilai3">Nilai 3:</label>
+        <input type="number" id="nilai3" placeholder="Masukkan nilai"><br>
+        <label for="nilai4">Nilai 4:</label>
+        <input type="number" id="nilai4" placeholder="Masukkan nilai"><br>
+        <button onclick="hitungRataRata()">Hitung Rata-Rata dan Grafik</button>
+        
+        <h2>Rata-Rata</h2>
+        <p id="rataRata">Rata-rata: -</p>
+        
+        <h2>Grafik Perbandingan Nilai</h2>
+        <canvas id="grafikNilai"></canvas>
+        
+        <h2>Tentukan Target dan Peningkatan</h2>
+        <label for="target">Target Nilai:</label>
+        <input type="number" id="target" placeholder="Masukkan target"><br>
+        <button onclick="hitungPeningkatan()">Hitung Peningkatan Dibutuhkan</button>
+        <p id="peningkatan">Peningkatan Dibutuhkan: -</p>
+    </div>
+
+    <script>
+        let chart;
+
+        function hitungRataRata() {
+            const nilai1 = parseFloat(document.getElementById('nilai1').value) || 0;
+            const nilai2 = parseFloat(document.getElementById('nilai2').value) || 0;
+            const nilai3 = parseFloat(document.getElementById('nilai3').value) || 0;
+            const nilai4 = parseFloat(document.getElementById('nilai4').value) || 0;
+            
+            const total = nilai1 + nilai2 + nilai3 + nilai4;
+            const rata = total / 4;
+            document.getElementById('rataRata').textContent = `Rata-rata: ${rata.toFixed(2)}`;
+            
+            // Update grafik
+            const ctx = document.getElementById('grafikNilai').getContext('2d');
+            if (chart) chart.destroy();
+            chart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Nilai 1', 'Nilai 2', 'Nilai 3', 'Nilai 4'],
+                    datasets: [{
+                        label: 'Nilai',
+                        data: [nilai1, nilai2, nilai3, nilai4],
+                        backgroundColor: ['red', 'blue', 'green', 'orange']
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: { beginAtZero: true }
+                    }
+                }
+            });
+        }
+
+        function hitungPeningkatan() {
+            const rata = parseFloat(document.getElementById('rataRata').textContent.split(': ')[1]) || 0;
+            const target = parseFloat(document.getElementById('target').value) || 0;
+            const peningkatan = target - rata;
+            document.getElementById('peningkatan').textContent = `Peningkatan Dibutuhkan: ${peningkatan.toFixed(2)} (dari rata-rata saat ini)`;
+        }
+    </script>
+</body>
+</html>
